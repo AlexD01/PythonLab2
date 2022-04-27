@@ -1,16 +1,22 @@
-sides =[3,2,4,7,5,12,11,13,15,16,14,14]
-sides=sorted(sides,reverse=True)
-smax=0
-for i in range(len(sides)):
-    for j in range(len(sides)):
-        for k in range(len(sides)):
-            a=sides[i]
-            b=sides[j]
-            c=sides[k]
-            if a+b>c and a+c>b and b+a>c:
-                p=(a+b+c)/2
-                s=round(((p*(p-a)*(p-b)*(p-c))**(1/2)).real,2)
-                
-                if s>smax:
-                    smax=s
-print(smax)
+import requests
+s_city="Moscow,Ru"
+appid="c92fbfcea52a7495aa212eb294630d14"
+res=requests.get("http://api.openweathermap.org/data/2.5/weather",params={'q':s_city,'units':'metric','lang':'ru','APPID':appid})
+data=res.json()
+
+print("Город: {}".format(s_city))
+print("Погодные условия: {}".format(data['weather'][0]['description']))
+print("Температура: {}".format(data['main']['temp']))
+print("Мин температура: {}".format(data['main']['temp_min']))
+print("Макс температура: {}".format(data['main']['temp_max']))
+print("Видимость: {} м".format(data['visibility']))
+print("Скорость ветра: {} м\с".format(data['wind']['speed']))
+print("______")
+res=requests.get("http://api.openweathermap.org/data/2.5/forecast",params={'q':s_city,'units':'metric','lang':'ru','APPID':appid})
+data=res.json()
+
+for i in data['list']:
+    print("Дата {} \n Температура {} \n Погодные условия {}".format(i['dt_txt'],i['main']['temp'],i['weather'][0]['description']))
+    print("______")
+
+      
